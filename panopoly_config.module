@@ -36,9 +36,17 @@ function panopoly_config_menu() {
       'page callback' => 'drupal_get_form',
       'page arguments' => array('variable_group_form', $variable_group_name),
       'access arguments' => array('administer site configuration'),
-      'file' => 'panopoly_config.admin.inc',
     );
   }
+
+  $items['admin/config/' . $profile_name . '/config'] = array(
+    'title' => 'Install config',
+    'description' => 'Configuration for',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('panopoly_config_profile_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'panopoly_config.profile.inc',
+  );
 
   return $items;
 }
@@ -126,8 +134,8 @@ function _panopoly_config_get_config() {
 function _panopoly_config_get_config_variable_group_name($group_name) {
   $profile_name = drupal_get_profile();
 
-  // Create a group name in the format $PROFILE_NAME_$GROUP_NAME.
-  return $profile_name . '_config_' . $group_name;
+  // Create a group name in the format $PROFILE_NAME_config_group_$GROUP_NAME.
+  return $profile_name . '_config_group_' . $group_name;
 }
 
 /**
@@ -178,4 +186,21 @@ function _panopoly_config_is_variable_a_config($name) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Returns a list of config that have show_on_install == TRUE.
+ */
+function _panopoly_config_get_install_config() {
+  $panopoly_config = _panopoly_config_get_config();
+  foreach ($panopoly_config as $group_name => $group_info) {
+    foreach ($group_info['config'] as $config_name => $config_info) {
+      if (empty($config_info['show_on_install'])) {
+        // Elimination strategy.
+        unset($panopoly_config[$group_name]['config'][$config_name]);
+      }
+    }
+  }
+
+  return $panopoly_config;
 }
