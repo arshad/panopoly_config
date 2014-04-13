@@ -26,7 +26,7 @@ function panopoly_config_variable_group_info() {
  * Implements hook_variable_info().
  */
 function panopoly_config_variable_info($options) {
-  $info = array();
+  $variables = array();
   $panopoly_config = _panopoly_config_get_config();
 
   // Create variables from config.
@@ -35,15 +35,15 @@ function panopoly_config_variable_info($options) {
       if (isset($group_info['config'])) {
         foreach ($group_info['config'] as $config_name => $config_info) {
           $variable_name = _panopoly_config_get_variable_name($config_name);
-          $info[$variable_name] = $config_info;
+          $variables[$variable_name] = $config_info;
 
           // Add group.
           $variable_group_name = _panopoly_config_get_variable_group_name($group_name);
-          $info[$variable_name]['group'] = $variable_group_name;
+          $variables[$variable_name]['group'] = $variable_group_name;
         }
       }
    }
   }
 
-  return $info;
+  return $variables;
 }
