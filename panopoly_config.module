@@ -87,15 +87,15 @@ function panopoly_config_set($name, $value) {
  */
 function panopoly_config_sync($name, $value) {
   $profile = drupal_get_profile();
-  if (strpos($profile . '_config_', $name) === false) {
-    // This is a site variable, hence update config variable.
-    $config_variable_name = _panopoly_config_get_config_variable_name($name);
-    variable_set($config_variable_name, $value);
-  }
-  else {
+  if (preg_match("/^" . $profile . "_config_/", $name)) {
     // This is a config variable, hence update site variable.
     $site_variable_name = _panopoly_config_get_site_variable_name($name);
     variable_set($site_variable_name, $value); 
+  }
+  else {
+    // This is a site variable, hence update config variable.
+    $config_variable_name = _panopoly_config_get_config_variable_name($name);
+    variable_set($config_variable_name, $value);
   }
 }
 
