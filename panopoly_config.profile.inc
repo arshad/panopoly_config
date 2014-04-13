@@ -8,7 +8,7 @@
 /**
  * Profile callback for Panopoly Config.
  */
-function panopoly_config_profile_form($form, &$form_state) {
+function panopoly_config_get_profile_form() {
   $panopoly_install_config = _panopoly_config_get_install_config();
 
   foreach ($panopoly_install_config as $group_name => $group_info) {
