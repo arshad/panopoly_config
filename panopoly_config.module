@@ -90,12 +90,16 @@ function panopoly_config_sync($name, $value) {
   if (preg_match("/^" . $profile . "_config_/", $name)) {
     // This is a config variable, hence update site variable.
     $site_variable_name = _panopoly_config_get_site_variable_name($name);
-    variable_set($site_variable_name, $value); 
+    if (variable_get($site_variable_name)) { // Check if site variable exists.
+      variable_set($site_variable_name, $value);
+    }
   }
   else {
     // This is a site variable, hence update config variable.
     $config_variable_name = _panopoly_config_get_config_variable_name($name);
-    variable_set($config_variable_name, $value);
+    if (_panopoly_config_is_variable_a_config($name)) { // Check is variable is a config.
+      variable_set($config_variable_name, $value);
+    }
   }
 }
 
@@ -150,9 +154,28 @@ function _panopoly_config_get_config_variable_name($config_name) {
  *  The variable name.
  *
  * @return
- *  THe site variable name.
+ *  The site variable name.
  */
 function _panopoly_config_get_site_variable_name($name) {
   $profile_name = drupal_get_profile();
   return str_replace($profile_name . '_config_', '', $name);
+}
+
+/**
+ * Helper function to check if a variable is a config.
+ *
+ * @param $name
+ *  The variable name.
+ *
+ * @return
+ *  TRUE if variable is a config.
+ */
+function _panopoly_config_is_variable_a_config($name) {
+  $panopoly_config = _panopoly_config_get_config();
+  foreach ($panopoly_config as $group_name => $group_info) {
+    if (in_array($name, $group_info['config'])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
