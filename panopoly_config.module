@@ -1,5 +1,81 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Build configuration pages for your distribution.
  */
+
+/**
+ * Implements hook_menu()
+ */
+function panopoly_config_menu() {
+  $items = array();
+  $profile_name = drupal_get_profile();
+  $profile = install_profile_info($profile_name);
+
+  $items['admin/config/' . $profile_name] = array(
+    'title' => $profile['name'],
+    'description' => 'Configuration for ' . $profile['name'],  
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $panopoly_config = _panopoly_config_get_config();
+  foreach ($panopoly_config as $group_name => $group_info) {
+    $items['admin/config/' . $profile_name . '/' . $group_name] = array(
+      'title' => $group_info['title'],
+      'description' => $group_info['description'],
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('panopoly_config_form', $group_name),
+      'access arguments' => array('administer site configuration'),
+      'file' => 'panopoly_config.admin.inc',
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Get all config implemented by modules.
+ */
+function _panopoly_config_get_config() {
+  // Invoke all hook_panopoly_config_info.
+  $config = module_invoke_all('panopoly_config_info');
+
+  // Just return it for now.
+  return $config;
+}
+
+/**
+ * Helper function to get the variable group name from a config group name.
+ *
+ * @param $group_name
+ *  The group name.
+ *
+ * @return
+ *  THe variable group name.
+ */
+function _panopoly_config_get_variable_group_name($group_name) {
+  $profile_name = drupal_get_profile();
+
+  // Create a group name in the format $PROFILE_NAME_$GROUP_NAME.
+  return $profile_name . '_config_' . $group_name;
+}
+
+/**
+ * Helper function to get the variable name from a config name.
+ *
+ * @param $config_name
+ *  The config name.
+ *
+ * @return
+ *  THe variable name.
+ */
+function _panopoly_config_get_variable_name($config_name) {
+  $profile_name = drupal_get_profile();
+
+  // Create a group name in the format $PROFILE_NAME_$CONFIG_NAME.
+  return $profile_name . '_config_' . $config_name;
+}
+

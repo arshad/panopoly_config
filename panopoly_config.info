@@ -1,5 +1,5 @@
 name = Panopoly Config
-description = Build configuration pages for your distribution
+description = Build configuration pages for your distribution.
 core = 7.x
 package = Panopoly
 version = 7.x-1.0
