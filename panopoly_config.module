@@ -39,15 +39,6 @@ function panopoly_config_menu() {
     );
   }
 
-  $items['admin/config/' . $profile_name . '/config'] = array(
-    'title' => 'Install config',
-    'description' => 'Configuration for',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('panopoly_config_profile_form'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'panopoly_config.profile.inc',
-  );
-
   return $items;
 }
 
