@@ -58,7 +58,7 @@ The module reads configuration from a hook and build separate configuration page
 
 This code will build a configuraton page at **Configuration --> Distribution Name --> Contact**. 
 
-## What is variable syncing?
+### What is variable syncing?
 
 This means that we will automatically update a config variable when its site variable equivalent is update and vice versa.
 
@@ -66,7 +66,7 @@ Say, your hook defines a *site_name* config, when the *site_name* variable chang
 
 This is useful if you want to build simpler config pages for your Distribution.
 
-## How to I add this to my distribution installation tasks?
+### How to I add this to my distribution installation tasks?
 
 Easy. Add a new task to your profile as follows:
 
