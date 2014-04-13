@@ -37,6 +37,32 @@ function panopoly_config_menu() {
 }
 
 /**
+ * Helper getter for config.
+ *
+ * @param $name
+ *  The name of the config.
+ * @return
+ *  The value of the variable.
+ */
+function panopoly_config_get($name, $default = '') {
+  $variable_name = _panopoly_config_get_variable_name($name);
+  return variable_get($variable_name, $default);
+}
+
+/**
+ * Helper setter for config.
+ *
+ * @param $name
+ *  The name of the config.
+ * @param $value
+ *  The value of the config.
+ */
+function panopoly_config_set($name, $value) {
+  $variable_name = _panopoly_config_get_variable_name($name);
+  return variable_set($variable_name, $value);
+}
+
+/**
  * Get all config implemented by modules.
  */
 function _panopoly_config_get_config() {
@@ -78,4 +104,3 @@ function _panopoly_config_get_variable_name($config_name) {
   // Create a group name in the format $PROFILE_NAME_$CONFIG_NAME.
   return $profile_name . '_config_' . $config_name;
 }
-

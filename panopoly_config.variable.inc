@@ -45,7 +45,5 @@ function panopoly_config_variable_info($options) {
    }
   }
 
-  dpm($info);
-
   return $info;
 }
