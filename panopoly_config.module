@@ -23,10 +23,16 @@ function panopoly_config_menu() {
 
   $panopoly_config = _panopoly_config_get_config();
   foreach ($panopoly_config as $group_name => $group_info) {
+    // Get variable_group_name.
     $variable_group_name = _panopoly_config_get_variable_group_name($group_name);
-    $items['admin/config/' . $profile_name . '/' . $group_name] = array(
-      'title' => $group_info['title'],
-      'description' => $group_info['description'],
+    
+    // Unset config.
+    unset($group_info['config']);
+
+    // Create menu item.
+    $items['admin/config/' . $profile_name . '/' . $group_name] = array();
+    $items['admin/config/' . $profile_name . '/' . $group_name] += $group_info;
+    $items['admin/config/' . $profile_name . '/' . $group_name] += array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('variable_group_form', $variable_group_name),
       'access arguments' => array('administer site configuration'),
