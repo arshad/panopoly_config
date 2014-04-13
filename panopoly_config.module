@@ -24,7 +24,7 @@ function panopoly_config_menu() {
   $panopoly_config = _panopoly_config_get_config();
   foreach ($panopoly_config as $group_name => $group_info) {
     // Get variable_group_name.
-    $variable_group_name = _panopoly_config_get_variable_group_name($group_name);
+    $variable_group_name = _panopoly_config_get_config_variable_group_name($group_name);
     
     // Unset config.
     unset($group_info['config']);
@@ -44,6 +44,14 @@ function panopoly_config_menu() {
 }
 
 /**
+ * Implements hook_variable_update().
+ */
+function panopoly_config_variable_update($name, $value, $old_value, $options) {
+  // Sync variables.
+  panopoly_config_sync($name, $value);
+}
+
+/**
  * Helper getter for config.
  *
  * @param $name
@@ -52,7 +60,7 @@ function panopoly_config_menu() {
  *  The value of the variable.
  */
 function panopoly_config_get($name, $default = '') {
-  $variable_name = _panopoly_config_get_variable_name($name);
+  $variable_name = _panopoly_config_get_config_variable_name($name);
   return variable_get($variable_name, $default);
 }
 
@@ -65,8 +73,30 @@ function panopoly_config_get($name, $default = '') {
  *  The value of the config.
  */
 function panopoly_config_set($name, $value) {
-  $variable_name = _panopoly_config_get_variable_name($name);
+  $variable_name = _panopoly_config_get_config_variable_name($name);
   return variable_set($variable_name, $value);
+}
+
+/**
+ * Syncs a config variable and a site variable.
+ *
+ * @param $name
+ *  The name of the config.
+ * @param $value
+ *  The value of the config.
+ */
+function panopoly_config_sync($name, $value) {
+  $profile = drupal_get_profile();
+  if (strpos($profile . '_config_', $name) === false) {
+    // This is a site variable, hence update config variable.
+    $config_variable_name = _panopoly_config_get_config_variable_name($name);
+    variable_set($config_variable_name, $value);
+  }
+  else {
+    // This is a config variable, hence update site variable.
+    $site_variable_name = _panopoly_config_get_site_variable_name($name);
+    variable_set($site_variable_name, $value); 
+  }
 }
 
 /**
@@ -89,7 +119,7 @@ function _panopoly_config_get_config() {
  * @return
  *  THe variable group name.
  */
-function _panopoly_config_get_variable_group_name($group_name) {
+function _panopoly_config_get_config_variable_group_name($group_name) {
   $profile_name = drupal_get_profile();
 
   // Create a group name in the format $PROFILE_NAME_$GROUP_NAME.
@@ -97,7 +127,7 @@ function _panopoly_config_get_variable_group_name($group_name) {
 }
 
 /**
- * Helper function to get the variable name from a config name.
+ * Helper function to get the config variable name from a config name.
  *
  * @param $config_name
  *  The config name.
@@ -105,9 +135,24 @@ function _panopoly_config_get_variable_group_name($group_name) {
  * @return
  *  THe variable name.
  */
-function _panopoly_config_get_variable_name($config_name) {
+function _panopoly_config_get_config_variable_name($config_name) {
   $profile_name = drupal_get_profile();
 
-  // Create a group name in the format $PROFILE_NAME_$CONFIG_NAME.
+  // Create a variable name in the format $PROFILE_NAME_$CONFIG_NAME.
   return $profile_name . '_config_' . $config_name;
+}
+
+/**
+ * Helper function to get the site variable name from a config name.
+ * Example profile_site_name will return site_name.
+ *
+ * @param $name
+ *  The variable name.
+ *
+ * @return
+ *  THe site variable name.
+ */
+function _panopoly_config_get_site_variable_name($name) {
+  $profile_name = drupal_get_profile();
+  return str_replace($profile_name . '_config_', '', $name);
 }
