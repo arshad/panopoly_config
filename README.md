@@ -66,9 +66,9 @@ Say, your hook defines a *site_name* config, when the *site_name* variable chang
 
 This is useful if you want to build simpler config pages for your Distribution.
 
-### How to I add this to my distribution installation tasks?
+### How do I add this to my distribution installation tasks?
 
-Easy. Add a new task to your profile as follows:
+Easy. Add a new task to your profile as follows. We will handle the rest.
 
     <?php
 
