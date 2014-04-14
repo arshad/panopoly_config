@@ -60,7 +60,7 @@ This code will build a configuraton page at **Configuration --> Distribution Nam
 
 ### What is variable syncing?
 
-This means that we will automatically update a config variable when its site variable equivalent is update and vice versa.
+This means that we will automatically update a config variable when its site variable equivalent is updated and vice versa.
 
 Say, your hook defines a *site_name* config, when the *site_name* variable changes, we'll update your config as well and vice versa.
 
