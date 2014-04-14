@@ -109,6 +109,9 @@ function _panopoly_config_get_config() {
   // Invoke all hook_panopoly_config_info.
   $config = module_invoke_all('panopoly_config_info');
 
+  // Invoke hook_panopoly_config_info_alter() to allow modules to alter config.
+  drupal_alter('panopoly_config_info', $config);
+
   // Just return it for now.
   return $config;
 }
