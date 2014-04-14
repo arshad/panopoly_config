@@ -85,6 +85,12 @@ function hook_panopoly_config_info() {
     ),
   );
 
-
   return $info;
+}
+
+/**
+ * Implements hook_panopoly_config_info_alter().
+ */
+function hook_panopoly_config_info_alter(&$info) {
+  // Make changes to $info here.
 }
